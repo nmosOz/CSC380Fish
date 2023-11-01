@@ -7,7 +7,7 @@ app = Flask(__name__)
 #Homepage
 @app.route("/")
 def profile():
-    return render_template("test.html")
+    return render_template("homepage.html")
 
 #Display livestream
 @app.route("/videoDisplay")
