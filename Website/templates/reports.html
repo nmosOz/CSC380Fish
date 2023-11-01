@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<style type="text/css">
+    html {font-family: garamond;}
+    a {color: blue;}
+    body {background-color: lavender;}
+    a:link {color:blue;
+    	background-color: transparent;}
+    a:visited {color: darkcyan;
+    	background-color: transparent;}
+    a:hover {color:cadetblue;
+    	background-color: transparent;}
+    a:active {color:purple;
+    	background-color: transparent;}
+    table, th, td{
+        border:1px solid black
+    }
+</style>
+<html>
+<body style="background-color: powderblue;">
+    <h1 style="text-align:center">Current Reports</h1>
+    <table style="width: 100%;">
+        {% for item in lst %}
+            <tr>
+                <td><a href="{{url_for('static', filename='/report_htmls/')}}{{ item[1] }}.html">{{ item[1] }}</a></td>
+                <td><a href="{{url_for('static', filename='/csv_files/')}}{{ item[1] }}.csv" download>download</a></td> 
+                </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
