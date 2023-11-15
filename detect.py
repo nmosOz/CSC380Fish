@@ -1,5 +1,5 @@
 import cv2
-
+import os
 
 from get_background import get_background
 
@@ -10,6 +10,7 @@ def detect(videoFile):
     #get the video frame height and width
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
+    path = "C:/Users/natha/OneDrive/Desktop/CSC380/outputs/"
     save_name = "C:/Users/natha/OneDrive/Desktop/CSC380/outputs/" + videoFile
 
     print(save_name)
@@ -19,6 +20,7 @@ def detect(videoFile):
         cv2.VideoWriter_fourcc(*'mp4v'), 10.0, 
         (frame_width, frame_height))
 
+    os.chdir(path)
     #get the background model
     background = get_background(videoFile)
     #Convert the background to grayscale
@@ -28,6 +30,10 @@ def detect(videoFile):
     frame_count = 0
     #Number of frames for differencing
     consecutive_frame = 4
+
+    #
+    fileName = 'savedImg.jpg'
+    num_imgs = 0
 
     #Loop over frames to detect moving objects
     while(cap.isOpened()):
@@ -55,12 +61,11 @@ def detect(videoFile):
             frame_diff = cv2.absdiff(gray, background)
             # thresholding to convert the frame to binary
 
-            ret, thres = cv2.threshold(frame_diff, 80, 400, cv2.THRESH_BINARY)
+            ret, thres = cv2.threshold(frame_diff, 50, 500, cv2.THRESH_BINARY)
 
             # dilate the frame a bit to get some more white area...
             # ... makes the detection of contours a bit easier
             dilate_frame = cv2.dilate(thres, None, iterations=2)
-
             # append the final result into the `frame_diff_list`
             frame_diff_list.append(dilate_frame)
 
@@ -79,14 +84,19 @@ def detect(videoFile):
 
                     # continue through the loop if contour area is less than 500...
                     # ... helps in removing noise detection
-                    if cv2.contourArea(contour) < 1000:
+                    if cv2.contourArea(contour) < 2000:
                         continue
                     # get the xmin, ymin, width, and height coordinates from the contours
 
                     (x, y, w, h) = cv2.boundingRect(contour)
-                    # draw the bounding boxes
-                    cv2.rectangle(orig_frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            
+                    # draw the bounding boxes 
+                    #IF prev x and prev y are less than 10 pixels away from current x and current y. Ignore it 
+                    img = cv2.rectangle(orig_frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        
+                    ROI = img[y-100:y+h+100, x-100:x+w+100]
+                    cv2.imwrite("saved_img_{}.jpg".format(num_imgs) , ROI)
+                    num_imgs += 1
+
                 cv2.imshow('Detected Objects', orig_frame)
                 out.write(orig_frame)
                 if cv2.waitKey(100) & 0xFF == ord('q'):
