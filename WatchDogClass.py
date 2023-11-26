@@ -56,7 +56,18 @@ if __name__ == "__main__":
     try:
         # Keep the script running and periodically check for changes
         while True:
+            #Get the contents of the source directory
+            videos_to_process = os.listdir(source_directory)
+            #Make sure it actually has something in it
+            if len(videos_to_process) == 0:
+                #If it does not, continue
+                continue
+            #else, loop through the array to process videos
+            else:
+                for video in videos_to_process:
+                    detect(video)
             time.sleep(1)
+
     except KeyboardInterrupt:
         # If the script is interrupted (e.g., with Ctrl+C), stop the observer
         observer.stop()
