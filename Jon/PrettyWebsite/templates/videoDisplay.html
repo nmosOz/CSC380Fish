@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<style>
+
+html {
+  --s: 50px;
+  --c: #191b22;
+  --_s: calc(2*var(--s)) calc(2*var(--s));
+  --_g: 35.36% 35.36% at;
+  --_c: #0000 66%,#20222a 68% 70%,#0000 72%;
+  background: 
+    radial-gradient(var(--_g) 100% 25%,var(--_c)) var(--s) var(--s)/var(--_s), 
+    radial-gradient(var(--_g) 0 75%,var(--_c)) var(--s) var(--s)/var(--_s), 
+    radial-gradient(var(--_g) 100% 25%,var(--_c)) 0 0/var(--_s), 
+    radial-gradient(var(--_g) 0 75%,var(--_c)) 0 0/var(--_s), 
+    repeating-conic-gradient(var(--c) 0 25%,#0000 0 50%) 0 0/var(--_s), 
+    radial-gradient(var(--_c)) 0 calc(var(--s)/2)/var(--s) var(--s) var(--c);
+  background-attachment: fixed;
+  font-family: garamond;
+  color: white;
+  font-family: 'Whitney SSm Medium';
+}
+
+	body {
+	  display: flex;
+	  flex-direction: column;
+	  //justify-content: center;
+	  align-items: center;
+	  height: 100vh;
+	  margin: 0;
+	}
+
+.header {
+	  z-index: 2;
+	  width: 100%;
+	  height: 50px;
+	  background-color: #235937;
+	  display: flex;
+	  align-items: center;
+	  padding-left: 10px;
+	}
+
+</style>
+<body style="background-color: powderblue;">
+
+	<div class="header">
+	    <a href="homepage.html">
+		<img class="logo" src="logo.png" alt="Logo">
+		</a>
+	</div>
+
+    <video width="1500px" height="100%" controls="controls" autoplay muted>
+        <source src="{{url_for('static/fish_videos', filename='NathanFish.mp4')}}" type="video/mp4" />
+    </video>
+</body>
+</html>

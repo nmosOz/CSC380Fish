@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<style>
+html {
+  --s: 50px;
+  --c: #191b22;
+  --_s: calc(2*var(--s)) calc(2*var(--s));
+  --_g: 35.36% 35.36% at;
+  --_c: #0000 66%,#20222a 68% 70%,#0000 72%;
+  background: 
+    radial-gradient(var(--_g) 100% 25%,var(--_c)) var(--s) var(--s)/var(--_s), 
+    radial-gradient(var(--_g) 0 75%,var(--_c)) var(--s) var(--s)/var(--_s), 
+    radial-gradient(var(--_g) 100% 25%,var(--_c)) 0 0/var(--_s), 
+    radial-gradient(var(--_g) 0 75%,var(--_c)) 0 0/var(--_s), 
+    repeating-conic-gradient(var(--c) 0 25%,#0000 0 50%) 0 0/var(--_s), 
+    radial-gradient(var(--_c)) 0 calc(var(--s)/2)/var(--s) var(--s) var(--c);
+  background-attachment: fixed;
+}
+    .center {
+	  //display: flex;
+	  justify-content: center;
+	  align-items: center;
+	  height: 100px;
+	  line-height: 200px;
+	  border: none;
+	}
+	
+	body {
+	  display: flex;
+	  flex-direction: column;
+	  //justify-content: center;
+	  align-items: center;
+	  height: 100vh;
+	  margin: 0;
+	}
+	
+	.header {
+	  z-index: 2;
+	  width: 100%;
+	  height: 50px;
+	  background-color: #235937;
+	  display: flex;
+	  align-items: center;
+	  padding-left: 10px;
+	}
+
+	.logo {
+	  z-index: 2;
+	  height: 30px;
+	}
+
+	.button {
+	  z-index: 2;
+	  color: white;
+	  background-color: #235937;
+	  font-size: 24px;
+	  font-family: 'Whitney SSm Medium';
+	  padding: 20px;
+	  width: 200px;
+	  text-align: center;
+	  cursor: pointer;
+	  margin: 10px;
+	}
+    html{
+        margin:0;
+        height: 100%;
+
+    }
+	<!--a.button{
+        -webkit-appearance: button;
+        -moz-appearance: button;
+        appearance: button;
+
+        text-decoration: none;
+        color: initial;       
+    }
+	//-->
+</style>
+<body>
+
+<div class="header">
+	<a href="homepage.html">
+	<img class="logo" src="logo.png" alt="Logo">
+	</a>
+</div>
+
+<div class="center">
+  <input class="button" type="button" onclick="location.href='reports.html';" value="Reports" style="position:relative; z-index:2;">
+  <input class="button" type="button" onclick="location.href='videoDisplay.html';" value="Livestream" style="position:relative; z-index:2;">
+</div>
+
+
+<img id="fish" src="fish.png" style="position:absolute; z-index:0;">
+
+<script>
+
+var img = document.getElementById('fish');
+var dx = 2;
+var dy = 2;
+
+function moveFish() {
+  var x = img.offsetLeft;
+  var y = img.offsetTop;
+
+  if (x + dx > window.innerWidth - img.width || x + dx < 0) {
+    dx = -dx;
+	img.style.transform = dx > 0 ? 'scaleX(1)' : 'scaleX(-1)';
+  }
+  if (y + dy > window.innerHeight - img.height || y + dy < 0) {
+    dy = -dy;
+  }
+
+  img.style.left = x + dx + 'px';
+  img.style.top = y + dy + 'px';
+
+  requestAnimationFrame(moveFish);
+}
+
+moveFish();
+
+</script>
+
+<!--
+<div class="center">
+  <input class="button" type="button" onclick="location.href='videoDisplay';" value="Livestream">
+</div>
+-->
+
+</body>
+</html>
+

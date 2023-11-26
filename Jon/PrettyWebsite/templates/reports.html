@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html {
+  --s: 50px;
+  --c: #191b22;
+  --_s: calc(2*var(--s)) calc(2*var(--s));
+  --_g: 35.36% 35.36% at;
+  --_c: #0000 66%,#20222a 68% 70%,#0000 72%;
+  background: 
+    radial-gradient(var(--_g) 100% 25%,var(--_c)) var(--s) var(--s)/var(--_s), 
+    radial-gradient(var(--_g) 0 75%,var(--_c)) var(--s) var(--s)/var(--_s), 
+    radial-gradient(var(--_g) 100% 25%,var(--_c)) 0 0/var(--_s), 
+    radial-gradient(var(--_g) 0 75%,var(--_c)) 0 0/var(--_s), 
+    repeating-conic-gradient(var(--c) 0 25%,#0000 0 50%) 0 0/var(--_s), 
+    radial-gradient(var(--_c)) 0 calc(var(--s)/2)/var(--s) var(--s) var(--c);
+  background-attachment: fixed;
+  font-family: garamond;
+  color: white;
+  font-family: 'Whitney SSm Medium';
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: transparent;
+}
+
+.header {
+  z-index: 2;
+  width: 100%;
+  height: 50px;
+  background-color: #235937;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.logo {
+	z-index: 2;
+	height: 30px;
+}
+
+a {
+  color: white;
+}
+
+a:link, a:visited, a:hover, a:active {
+  color: white;
+  background-color: transparent;
+}
+
+table, th, td {
+  border: 1px solid white;
+}
+</style>
+</head>
+
+<body style="background-color: transparent;">
+
+<div class="header">
+    <a href="homepage.html">
+	<img class="logo" src="logo.png" alt="Logo">
+	</a>
+</div>
+
+    <h1 style="text-align:center">Current Reports</h1>
+    <table style="width: 100%;">
+        {% for item in lst %}
+            <tr>
+                <td><a href="{{url_for('static', filename='/report_htmls/')}}{{ item[1] }}.html">{{ item[1] }}</a></td>
+                <td><a href="{{url_for('static', filename='/csv_files/')}}{{ item[1] }}.csv" download>download</a></td> 
+                </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
