@@ -1,0 +1,5 @@
+#Import the detect program
+from detect import detect
+import os
+
+detect("11_21_23@14_42_43t.mp4")
