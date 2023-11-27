@@ -2,9 +2,18 @@ import cv2
 import os
 
 from get_background import get_background
+from fishDetection import detectAndDisplay
+
+#Cascade file for fish 
+fish_cascade = cv2.CascadeClassifier("C:/Users/natha/OneDrive/Desktop/CSC380/fishCascadeV7.xml")
+coords = [0 for i in range(4)]
 
 
 def detect(videoFile):
+    #start time
+    startTime = 0 
+    #end time
+    endTime = 0
     #Read the video file
     cap = cv2.VideoCapture("C:/Users/natha/OneDrive/Desktop/CSC380/inputs/" + videoFile)
     #get the video frame height and width
@@ -17,7 +26,7 @@ def detect(videoFile):
     # define codec and create VideoWriter object
     out = cv2.VideoWriter(
         save_name,
-        cv2.VideoWriter_fourcc(*'mp4v'), 10.0, 
+        cv2.VideoWriter_fourcc(*'vp80'), 10.0, 
         (frame_width, frame_height))
 
     os.chdir(path)
@@ -35,6 +44,7 @@ def detect(videoFile):
     fileName = 'savedImg.jpg'
     num_imgs = 0
 
+
     #Loop over frames to detect moving objects
     while(cap.isOpened()):
         ret, frame = cap.read()
@@ -42,11 +52,11 @@ def detect(videoFile):
         if ret == True:
 
             height, width, layers = frame.shape
-            new_h = int(height / 2)
-            new_w = int(width / 2)
+            new_h = int(height)
+            new_w = int(width)
             frame = cv2.resize(frame, (new_w, new_h))
 
-            print(frame_count)
+            #print(frame_count)
             frame_count += 1
             orig_frame = frame.copy()
 
@@ -61,7 +71,7 @@ def detect(videoFile):
             frame_diff = cv2.absdiff(gray, background)
             # thresholding to convert the frame to binary
 
-            ret, thres = cv2.threshold(frame_diff, 50, 500, cv2.THRESH_BINARY)
+            ret, thres = cv2.threshold(frame_diff, 35, 500, cv2.THRESH_BINARY)
 
             # dilate the frame a bit to get some more white area...
             # ... makes the detection of contours a bit easier
@@ -84,18 +94,68 @@ def detect(videoFile):
 
                     # continue through the loop if contour area is less than 500...
                     # ... helps in removing noise detection
-                    if cv2.contourArea(contour) < 2000:
+                    if cv2.contourArea(contour) < 500:
+                        #print("box too small")
                         continue
                     # get the xmin, ymin, width, and height coordinates from the contours
 
                     (x, y, w, h) = cv2.boundingRect(contour)
+
                     # draw the bounding boxes 
-                    #IF prev x and prev y are less than 10 pixels away from current x and current y. Ignore it 
                     img = cv2.rectangle(orig_frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+                    #If the length of the array containing the previous coordinates is 0, add the coordinates
+                    if len(coords) == 0:
+                        coords[0] = x
+                        coords[1] = y
+                    #If the new x and y coordinates are w/in 5 pixels of the last ones, continue 
+                    if coords[0] - 15 <= x <= coords[0] + 15 or coords[1] - 15 <= y <= coords[1] + 15:
+                        startTime = 0
+                        continue
+                    #See if the object is moving left 
+                    elif x < coords[0] + 20 and coords[1] - 40 <= y <= coords[1] + 40:
+                        if startTime == 0:
+                            print('movement started')
+                            startTime = (int)(cap.get(cv2.CAP_PROP_POS_MSEC))
+                        print("object moving left")   
+                    #See if the object is moving right
+                    elif x > coords[0] - 20 and coords[1] - 40 <= y <= coords[1] + 40:
+                        if startTime == 0:
+                            print('movement started')
+                            startTime = (int)(cap.get(cv2.CAP_PROP_POS_MSEC))
+                        print("Object moving to the right")
+                    #IF there is nothing moving
+                    else: 
+                        #print('else')
+                        endTime = (int)(cap.get(cv2.CAP_PROP_POS_MSEC))
+
+                    print(x, coords[0])
+                    print(y, coords[1])
+                    print("start")
+                    print(startTime)
+                    print("End time")
+                    print(endTime)
+                    
+                    
+                    #Update with new coordinates
+                    coords[0] = x
+                    coords[1] = y
+
+     
+                    #img = cv2.rectangle(orig_frame, (0, 0), (0, 0), (0, 255, 0), 0)
         
-                    ROI = img[y-100:y+h+100, x-100:x+w+100]
-                    cv2.imwrite("saved_img_{}.jpg".format(num_imgs) , ROI)
-                    num_imgs += 1
+                    ROI = img[y:y+h, x:x+w]
+
+                    #Call the detect and display functions
+                    #print("Calling detect and display") 
+                    
+                    if(ROI.size == 0):
+                        print("frame messed up")
+                        continue
+                    #detectAndDisplay(ROI)
+
+                    ##cv2.imwrite("saved_img_{}.jpg".format(num_imgs) , ROI)
+                    ##num_imgs += 1
 
                 cv2.imshow('Detected Objects', orig_frame)
                 out.write(orig_frame)
@@ -105,10 +165,16 @@ def detect(videoFile):
             print('finished processing video')
             break
 
+    #os.remove(videoFile)
     out.release()
     cap.release()
     cv2.destroyAllWindows()
 
+def movement(startTime, cap):
+    #While the fish is still moving 
+    endTime = cap.get(cv2.CAP_PROP_POS_MSEC)
+
+    return endTime
+
 #Command to execute the code
 #python detect.py --input input/video_1.mp4 -c 4
-
