@@ -65,7 +65,7 @@ def Rec():
           cv.imshow("Video",frame)
           if cv.waitKey(1) == ord('q'):
              break
-          if ((time.time() - start_time)>=Tm):
+          if ((time.time() - start_time)>=Tm): #If the video is the correct length, ends the iteration
              break
      
    # Releases the temporary video and gets ready for a new loop
@@ -79,7 +79,7 @@ def Rec():
       VidMagic(TimeT)
       os._exit(0)
 
-Tm = Tm * 60 - .1
+Tm = Tm * 60 - .1 #converts the time from minutes to seconds
 
 # Runs the program
 while (Ln!=0):
