@@ -1,6 +1,4 @@
 # CSC380Fish
-This is a repository for Team A for CSC 380
+This is the finished repository for Team Fish from the Fall 2023 CS380 class.
 
-
-the V5 cascade is the one demoed in class on 10/25 and the V6 was made after and has less false postives
-You need to have a video in the same folder and give it the path to that
+Most of the files in this repository are for the server side client to detect, identify, and create reports based on videos of fish, which are then displayed on a website. The other programs are for the Nuc to record and save videos to the server.
